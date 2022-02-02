@@ -7,11 +7,16 @@
   margin: 100px 0 100px 0;
 }
 
-.letter-box {
+.box {
   height: 135px;
   width: 135px;
   margin: 10px;
   text-align: center;
+  background-color: #efeef1;
+}
+
+.answer-box {
+  background-color: #fff;
 }
 
 .btn {

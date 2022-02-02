@@ -1,25 +1,40 @@
-let wordOftheDay = '';
-let shuffledWord = '';
-let shuffledArray = '';
+let wordOftheDay = getWord();
+let shuffledArray = wordOftheDay.split('');
 let answerNum = 0;
-let answerCharArray = [];
+let answerCharArray = [' ', ' ', ' ', ' ', ' ', ' '];
 let answerWord = '';
 
 //on document ready, render game
 $(document).ready(() => {
   $('#main').html(createBaseHtml());
   //get data from local storage
-
+  //renderAnswer();
   //event handlers
   $('#enter-btn').click(function() {
-    console.log("word: ")
+    console.log(answerCharArray);
+    console.log(shuffledArray);
   })
 
+  $('#undo-btn').click(function() {
+    deselectAll();
+  })
+
+  $('#shuffle-btn').click(function() {
+    shuffleWord();
+  })
+
+
   $('.letter-box').click(function() {
-    console.log($(this).attr('id'));
     const id = $(this).attr('id');
     selectLetter(id);
   })
+
+  $('.answer-box').click(function() {
+    const id = $(this).attr('id');
+    deselectLetter(id);
+  })
+
+
 
   //start a new game
   newGame()
@@ -28,16 +43,7 @@ $(document).ready(() => {
 
 
 function newGame () {
-
-  console.log("new game");
-  wordOftheDay = getWord();
-  console.log(`word of the day: ${wordOftheDay}`);
-  shuffledWord = wordOftheDay.shuffle();
-  console.log(`shuffled: ${shuffledWord}`);
-  shuffledArray = shuffledWord.split('');
-  for (i = 0; i < 6; i++) {
-    $(`#L${i} > p`).text(shuffledArray[i]);
-  }
+  shuffleWord();
 }
 
 //create the html that won't change game to game
@@ -46,24 +52,24 @@ function createBaseHtml() {
   for (var i = 0; i < 5; i++) {
     html += `<div id="A${i}" class="d-flex flex-row justify-content-center">`;
     for (var j = 0; j < 6; j++) {
-      html += `<div id='A${i}L${j}' class='letter-box border border-secondary rounded'><p></p></div>`;
+      html += `<button id='A${i}L${j}' class='box answer-box border border-secondary rounded'><p></p></button>`;
     }
     html += '</div>';
   }
   html += '</div><div id="letter-bank" class="d-flex flex-row justify-content-center">';
   for (var i = 0; i < 6; i++) {
-    html += `<button id='L${i}' class='letter-box border border-secondary rounded'>
+    html += `<button id='L${i}' class='box letter-box border border-secondary rounded'>
               <p></p>
             </button>`;
   }
-  html += `</div><div id="submit" class="d-flex flex-row justify-content-center">
-            <button class="btn btn-secondary">
+  html += `</div><div class="d-flex flex-row justify-content-center">
+            <button id="shuffle-btn" class="btn btn-secondary">
               <i class="bi bi-shuffle"></i>
             </button>
             <button id="enter-btn" class="btn btn-custom">
               ENTER
             </button>
-            <button class="btn btn-secondary">
+            <button id="undo-btn" class="btn btn-secondary">
               <i class="bi bi-arrow-counterclockwise"></i>
             </button>
           </div>`;
@@ -81,19 +87,72 @@ function getWord() {
 }
 
 //put letter into box when user selects it
-function selectLetter(id) {
+function selectLetter(letterId) {
   //1. determine which answer box this letter goes in using answerNumber and the answerCharArray;
-  const letterNum = answerCharArray.length;
-  const letter = $(`#${id} > p`).text();
-  //2. add the letter by id to that letter box
-  $(`#A${answerNum}L${letterNum} > p`).text(letter)
-  //3. delete the letter from the letter-bank array and rerender
-  $(`#${id} > p`).text('');
+  const blankSpaceIndex = answerCharArray.indexOf(' ');
+  const letter = $(`#${letterId} > p`).text();
+  const letterIndex = letterId.split('')[1];
+  //2. add the letter to the first blank space in the answer box
+  answerCharArray[blankSpaceIndex] = letter;
+  $(`#A${answerNum}L${blankSpaceIndex} > p`).text(letter)
+  $(`#A${answerNum}L${blankSpaceIndex}`).css('background-color', '#efeef1')
+  //3. blankify the letter from the letter-bank array and rerender
+  shuffledArray[letterIndex] = ' ';
+  $(`#${letterId} > p`).text('');
+  //4. disable blank letter button
+  $(`#${letterId}`).attr('disabled', true);
+  $(`#${letterId}`).css('background-color', '#fff');
 }
 
 //put letter back when user de-selects it
-function deselectLetter() {
+function deselectLetter(answerLetterId) {
+  //1. determine which letter box this letter goes in using shuffleArray;
+  const blankSpaceIndex = shuffledArray.indexOf(' ');
+  const letter = $(`#${answerLetterId} > p`).text();
+  const answerLetterIndex = answerLetterId.split('')[3];
+  //2. add the letter by id to that letter box and array
+  shuffledArray[blankSpaceIndex] = letter;
+  $(`#L${blankSpaceIndex} > p`).text(letter)
+  $(`#L${blankSpaceIndex}`).css('background-color', '#efeef1')
+  //3. blankify the letter from the answerCharArray and rerender
+  answerCharArray[answerLetterIndex] = ' ';
+  $(`#${answerLetterId} > p`).text('');
+  $(`#${answerLetterId}`).css('background-color', '#fff');
+  //4. re-enable letter button
+  $(`#L${blankSpaceIndex}`).attr('disabled', false);
+}
 
+function deselectAll() {
+  for (var i = 0; i < 6; i++) {
+    deselectLetter(`A${answerNum}L${i}`);
+  }
+}
+
+function shuffleWord() {
+  shuffledArray = shuffledArray.join('').shuffle();
+  if (!shuffledArray.includes(' '))
+  {
+    for (i = 0; i < 6; i++) {
+      $(`#L${i} > p`).text(shuffledArray[i]);
+    }
+  } else {
+    const numberOfBlanks = shuffledArray.filter(x => x === ' ').length;
+    for (i = 0; i < numberOfBlanks; i++)
+    {
+      shuffledArray.push(shuffledArray.splice(shuffledArray.indexOf(' '), 1)[0])
+    }
+    for (i = 0; i < 6; i++) {
+      $(`#L${i} > p`).text(shuffledArray[i]);
+
+      if (i < 6 - numberOfBlanks) {
+        $(`#L${i}`).attr('disabled', false);
+        $(`#L${i}`).css('background-color', '#efeef1');
+      } else {
+        $(`#L${i}`).attr('disabled', true);
+        $(`#L${i}`).css('background-color', '#fff');
+      }
+    }
+  }
 }
 
 //upon entering, reach out to API to see if word is in dicitonary (doesn't matter if it was the original word that was scrambled)
@@ -112,5 +171,9 @@ String.prototype.shuffle = function () {
       a[i] = a[j];
       a[j] = tmp;
   }
-  return a.join("");
-}
+  return a;
+};
+
+Array.prototype.move = function (from, to) {
+  this.splice(to, 0, this.splice(from, 1)[0]);
+};
