@@ -1,0 +1,33 @@
+.title {
+  font-size: 120px;
+  margin: 50px;
+}
+
+#letter-bank {
+  margin: 100px 0 100px 0;
+}
+
+.letter-box {
+  height: 135px;
+  width: 135px;
+  margin: 10px;
+  text-align: center;
+}
+
+.btn {
+  padding: 40px;
+  font-size: 70px;
+  margin: 25px;
+}
+
+.btn-custom {
+  color: #fff;
+  background-color: #198759b3;
+  border-color: #198759b3;
+}
+
+p {
+  font-size: 80px;
+  margin: 0px;
+  padding: 10px;
+}
