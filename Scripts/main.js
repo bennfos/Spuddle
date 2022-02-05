@@ -6,13 +6,16 @@ let answerWord = '';
 
 //on document ready, render game
 $(document).ready(() => {
-  $('#main').html(createBaseHtml());
+  renderAnswerGrid(createAnswerGrid());
+  renderLetterBank(createLetterBank());
+  renderButtons(createButtons());
   //get data from local storage
-  //renderAnswer();
+
   //event handlers
   $('#enter-btn').click(function() {
     console.log(answerCharArray);
     console.log(shuffledArray);
+    checkAnswer();
   })
 
   $('#undo-btn').click(function() {
@@ -22,7 +25,6 @@ $(document).ready(() => {
   $('#shuffle-btn').click(function() {
     shuffleWord();
   })
-
 
   $('.letter-box').click(function() {
     const id = $(this).attr('id');
@@ -34,8 +36,6 @@ $(document).ready(() => {
     deselectLetter(id);
   })
 
-
-
   //start a new game
   newGame()
 });
@@ -46,59 +46,26 @@ function newGame () {
   shuffleWord();
 }
 
-//create the html that won't change game to game
-function createBaseHtml() {
-  let html = '<div id="answer-grid" class="d-flex flex-column">';
-  for (var i = 0; i < 5; i++) {
-    html += `<div id="A${i}" class="d-flex flex-row justify-content-center">`;
-    for (var j = 0; j < 6; j++) {
-      html += `<button id='A${i}L${j}' class='box answer-box border border-secondary rounded'><p></p></button>`;
-    }
-    html += '</div>';
-  }
-  html += '</div><div id="letter-bank" class="d-flex flex-row justify-content-center">';
-  for (var i = 0; i < 6; i++) {
-    html += `<button id='L${i}' class='box letter-box border border-secondary rounded'>
-              <p></p>
-            </button>`;
-  }
-  html += `</div><div class="d-flex flex-row justify-content-center">
-            <button id="shuffle-btn" class="btn btn-secondary">
-              <i class="bi bi-shuffle"></i>
-            </button>
-            <button id="enter-btn" class="btn btn-custom">
-              ENTER
-            </button>
-            <button id="undo-btn" class="btn btn-secondary">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>`;
-  return html;
-}
 
-//get word for game
-function getWord() {
-  //call to api
-  //fetch('https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&minCorpusCount=500&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=6&maxLength=6&api_key=YOURAPIKEY')
-  //.then(response => response.json())
-  //.then(data => console.log(data));
 
-  return "SURGES";
-}
+
 
 //put letter into box when user selects it
 function selectLetter(letterId) {
   //1. determine which answer box this letter goes in using answerNumber and the answerCharArray;
   const blankSpaceIndex = answerCharArray.indexOf(' ');
-  const letter = $(`#${letterId} > p`).text();
+  const letter = $(`#${letterId} .letter`).text();
+  const score = $(`#${letterId} .score`).text();
   const letterIndex = letterId.split('')[1];
   //2. add the letter to the first blank space in the answer box
   answerCharArray[blankSpaceIndex] = letter;
-  $(`#A${answerNum}L${blankSpaceIndex} > p`).text(letter)
+  $(`#A${answerNum}L${blankSpaceIndex} .letter`).text(letter)
+  $(`#A${answerNum}L${blankSpaceIndex} .score`).text(score)
   $(`#A${answerNum}L${blankSpaceIndex}`).css('background-color', '#efeef1')
+  $(`#A${answerNum}L${blankSpaceIndex}`).addClass('letter-placed')
   //3. blankify the letter from the letter-bank array and rerender
   shuffledArray[letterIndex] = ' ';
-  $(`#${letterId} > p`).text('');
+  $(`#${letterId} p`).text('');
   //4. disable blank letter button
   $(`#${letterId}`).attr('disabled', true);
   $(`#${letterId}`).css('background-color', '#fff');
@@ -108,15 +75,17 @@ function selectLetter(letterId) {
 function deselectLetter(answerLetterId) {
   //1. determine which letter box this letter goes in using shuffleArray;
   const blankSpaceIndex = shuffledArray.indexOf(' ');
-  const letter = $(`#${answerLetterId} > p`).text();
+  const letter = $(`#${answerLetterId} .letter`).text();
+  const score = $(`#${answerLetterId} .score`).text();
   const answerLetterIndex = answerLetterId.split('')[3];
   //2. add the letter by id to that letter box and array
   shuffledArray[blankSpaceIndex] = letter;
-  $(`#L${blankSpaceIndex} > p`).text(letter)
+  $(`#L${blankSpaceIndex} .letter`).text(letter)
+  $(`#L${blankSpaceIndex} .score`).text(score)
   $(`#L${blankSpaceIndex}`).css('background-color', '#efeef1')
   //3. blankify the letter from the answerCharArray and rerender
   answerCharArray[answerLetterIndex] = ' ';
-  $(`#${answerLetterId} > p`).text('');
+  $(`#${answerLetterId} p`).text('');
   $(`#${answerLetterId}`).css('background-color', '#fff');
   //4. re-enable letter button
   $(`#L${blankSpaceIndex}`).attr('disabled', false);
@@ -130,35 +99,64 @@ function deselectAll() {
 
 function shuffleWord() {
   shuffledArray = shuffledArray.join('').shuffle();
-  if (!shuffledArray.includes(' '))
-  {
-    for (i = 0; i < 6; i++) {
-      $(`#L${i} > p`).text(shuffledArray[i]);
-    }
-  } else {
+  if (shuffledArray.includes(' ')) {
     const numberOfBlanks = shuffledArray.filter(x => x === ' ').length;
-    for (i = 0; i < numberOfBlanks; i++)
-    {
+    for (i = 0; i < numberOfBlanks; i++) {
       shuffledArray.push(shuffledArray.splice(shuffledArray.indexOf(' '), 1)[0])
     }
     for (i = 0; i < 6; i++) {
-      $(`#L${i} > p`).text(shuffledArray[i]);
-
-      if (i < 6 - numberOfBlanks) {
-        $(`#L${i}`).attr('disabled', false);
-        $(`#L${i}`).css('background-color', '#efeef1');
+      $(`#L${i} .letter`).text(shuffledArray[i])
+      if ($(`#L${i} .letter`).text() != ' ') {
+        makeTile(i);
       } else {
-        $(`#L${i}`).attr('disabled', true);
-        $(`#L${i}`).css('background-color', '#fff');
+        makeBlank(i);
       }
+    }
+  } else {
+    $('.letter-box').attr('disabled', false);
+    $('.letter-box').css('background-color', '#efeef1');
+    for (i = 0; i < 6; i++) {
+      $(`#L${i} .letter`).text(shuffledArray[i]);
+      $(`#L${i} .score`).text(getScore(shuffledArray[i]));
     }
   }
 }
 
+const makeTile = (i) => {
+  $(`#L${i}`).attr('disabled', false);
+  $(`#L${i}`).css('background-color', '#efeef1');
+  $(`#L${i} .score`).text(getScore(shuffledArray[i]));
+}
+
+const makeBlank = (i) => {
+  $(`#L${i}`).attr('disabled', true);
+  $(`#L${i}`).css('background-color', '#fff');
+  $(`#L${i} .score`).text('');
+}
+
+const makeSuccessfulWord = () => {
+  $(`#A${answerNum} .letter-placed`).css('background-color', '')
+  $(`#A${answerNum} .letter-placed`).addClass('btn-custom')
+}
+
+const makeFailureWord = () => {
+  $(`#A${answerNum} .letter-placed`).css('background-color', '')
+  $(`#A${answerNum} .letter-placed`).addClass('btn-failure')
+}
+
 //upon entering, reach out to API to see if word is in dicitonary (doesn't matter if it was the original word that was scrambled)
 function checkAnswer() {
-
-
+  const word = answerCharArray.join('');
+  if (isAWord(word)) {
+    makeSuccessfulWord();
+  } else {
+    makeFailureWord();
+  }
+  $(`#A${answerNum} .answer-box`).attr('disabled', true);
+  answerNum++;
+  shuffledArray = wordOftheDay.shuffle();
+  shuffleWord();
+  answerCharArray = [' ', ' ', ' ', ' ', ' ', ' '];
 }
 
 String.prototype.shuffle = function () {
@@ -177,3 +175,4 @@ String.prototype.shuffle = function () {
 Array.prototype.move = function (from, to) {
   this.splice(to, 0, this.splice(from, 1)[0]);
 };
+

@@ -1,6 +1,6 @@
 .title {
-  font-size: 120px;
-  margin: 50px;
+  font-size: 100px;
+  margin: 50px 10px 50px 80px;
 }
 
 #letter-bank {
@@ -19,6 +19,12 @@
   background-color: #fff;
 }
 
+.nav .btn {
+  padding: 10px;
+  font-size: 50px;
+  margin: 10px;
+}
+
 .btn {
   padding: 40px;
   font-size: 70px;
@@ -31,8 +37,35 @@
   border-color: #198759b3;
 }
 
-p {
+.btn-failure {
+  color: #fff;
+  background-color: #f14646ec;
+  border-color: #f14646ec;
+}
+
+.letter {
   font-size: 80px;
   margin: 0px;
-  padding: 10px;
+  padding: 0px;
+  height: 75px;
+}
+
+.score {
+  float: right;
+  margin-right: 4px;
+}
+
+.letter-tile {
+  width: 120px;
+  height: 120px;
+}
+
+.btn-link {
+  color: grey !important;
+}
+
+
+
+.modal-content p {
+  font-size: 20px;
 }
