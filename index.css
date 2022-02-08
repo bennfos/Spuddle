@@ -1,16 +1,25 @@
+#container {
+max-width: 500px;
+margin: 0 auto;
+}
+
+#main {
+  max-width: 500px;
+}
+
 .title {
-  font-size: 100px;
-  margin: 50px 10px 50px 80px;
+  font-size: 35px;
+  margin: 10px 10px 10px 50px;
 }
 
 #letter-bank {
-  margin: 100px 0 100px 0;
+  margin: 30px 0 30px 0;
 }
 
 .box {
-  height: 135px;
-  width: 135px;
-  margin: 10px;
+  height: 62px;
+  width: 62px;
+  margin: 3px;
   text-align: center;
   background-color: #efeef1;
 }
@@ -19,16 +28,30 @@
   background-color: #fff;
 }
 
+.nav {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+#stats-btn {
+  margin-right: 0;
+}
+
+#settings-btn {
+  margin-left: 0;
+}
+
 .nav .btn {
   padding: 10px;
-  font-size: 50px;
-  margin: 10px;
+  font-size: 20px;
+  margin: 5px;
 }
 
 .btn {
-  padding: 40px;
-  font-size: 70px;
-  margin: 25px;
+  padding: 10px;
+  font-size: 30px;
+  margin: 10px 10px 0 10px;
 }
 
 .btn-custom {
@@ -44,27 +67,19 @@
 }
 
 .letter {
-  font-size: 80px;
+  font-size: 30px;
   margin: 0px;
   padding: 0px;
-  height: 75px;
 }
 
 .score {
   float: right;
-  margin-right: 4px;
-}
-
-.letter-tile {
-  width: 120px;
-  height: 120px;
+  font-size: 16px;
 }
 
 .btn-link {
   color: grey !important;
 }
-
-
 
 .modal-content p {
   font-size: 20px;
