@@ -1,6 +1,9 @@
 #container {
-max-width: 500px;
-margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  max-width: 440px;
+  margin: 0 auto;
 }
 
 #main {
@@ -14,6 +17,7 @@ margin: 0 auto;
 
 #letter-bank {
   margin: 30px 0 30px 0;
+  min-width: 385px;
 }
 
 .box {
@@ -22,6 +26,10 @@ margin: 0 auto;
   margin: 3px;
   text-align: center;
   background-color: #efeef1;
+}
+
+.answer {
+  min-width: 385px;
 }
 
 .answer-box {
@@ -52,6 +60,15 @@ margin: 0 auto;
   padding: 10px;
   font-size: 30px;
   margin: 10px 10px 0 10px;
+  line-height: normal;
+}
+
+#button-container {
+  min-width: 385px;
+}
+
+button {
+  line-height: normal !important;
 }
 
 .btn-custom {
@@ -67,14 +84,14 @@ margin: 0 auto;
 }
 
 .letter {
-  font-size: 30px;
+  font-size: 38px;
   margin: 0px;
   padding: 0px;
 }
 
 .score {
   float: right;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .btn-link {
