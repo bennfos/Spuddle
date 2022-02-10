@@ -1,11 +1,8 @@
 //get word for game
 const getWord = () => {
   //call to api
-  //fetch('https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&minCorpusCount=500&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=6&maxLength=6&api_key=YOURAPIKEY')
-  //.then(response => response.json())
-  //.then(data => console.log(data));
-
-  return "bakers".toUpperCase();
+  return fetch(`https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&excludePartOfSpeech=pronoun%2Cabbreviation%2Cfamily-name%2Cgiven-name%2Cidiom%2Cphrasal-prefix%2Cproper-noun%2Cproper-noun-plural%2Cproper-noun-possessive%2Cconjunction%2Csuffix&minCorpusCount=700&maxCorpusCount=-1&minDictionaryCount=2&maxDictionaryCount=-1&minLength=6&maxLength=6&api_key=${api_key}`)
+  .then(response => response.json())
 }
 
 const getScore = (letter) =>{
@@ -13,18 +10,9 @@ const getScore = (letter) =>{
 }
 
 const getWordData = (word) => {
-  return fetch(`https://api.wordnik.com/v4/word.json/${word}/definitions?limit=1&includeRelated=false&useCanonical=false&includeTags=false&api_key=YOURAPIKEY`)
-  .then(response => response.json());
-}
-
-const isAWord = (word) => {
-  //const data = getWordData(word).then(r => {
-    //if (r.word) return true
-    //else return false
-  //})
-  if (word) return false
-  else return false;
-}
+  return fetch(`https://api.wordnik.com/v4/word.json/${word}/definitions?limit=1&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=${api_key}`)
+  .then(response => response.json())
+};
 
 const scores = {
   A: 1, E: 1, I: 1, O: 1, U: 1, L: 1, N: 1, S: 1, T: 1, R: 1,

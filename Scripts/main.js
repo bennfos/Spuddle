@@ -1,17 +1,22 @@
-let wordOftheDay = getWord();
-let shuffledArray = wordOftheDay.split('');
+let wordOftheDay = '';
+let shuffledArray = [];
 let answerNum = 0;
 let answerCharArray = [' ', ' ', ' ', ' ', ' ', ' '];
 let answerWord = '';
+let answerWordArray = [];
 
 //on document ready, render game
 $(document).ready(() => {
-  renderAnswerGrid(createAnswerGrid());
-  renderLetterBank(createLetterBank());
-  renderButtons(createButtons());
-  //get data from local storage
-
-  //event handlers
+  getWord().then((data) => {
+    console.log(data);
+    console.log(data.word);
+    wordOftheDay = data.word.toUpperCase();
+    shuffledArray = wordOftheDay.split('')
+  }).then(() => {
+    renderAnswerGrid(createAnswerGrid())
+    renderLetterBank(createLetterBank())
+    renderButtons(createButtons())
+    //event handlers
   $('#enter-btn').click(function() {
     console.log(answerCharArray);
     console.log(shuffledArray);
@@ -38,6 +43,8 @@ $(document).ready(() => {
 
   //start a new game
   newGame()
+  })
+  //get data from local storage
 });
 
 
@@ -87,6 +94,7 @@ function deselectLetter(answerLetterId) {
   answerCharArray[answerLetterIndex] = ' ';
   $(`#${answerLetterId} p`).text('');
   $(`#${answerLetterId}`).css('background-color', '#fff');
+  $(`#${answerLetterId}`).removeClass('letter-placed');
   //4. re-enable letter button
   $(`#L${blankSpaceIndex}`).attr('disabled', false);
 }
@@ -146,18 +154,29 @@ const makeFailureWord = () => {
 
 //upon entering, reach out to API to see if word is in dicitonary (doesn't matter if it was the original word that was scrambled)
 function checkAnswer() {
-  const word = answerCharArray.join('');
-  if (isAWord(word)) {
-    makeSuccessfulWord();
+  const word = answerCharArray.join('').trim().toLowerCase();
+  if (answerWordArray.includes(word)) {
+    alert("You already tried this word!")
   } else {
-    makeFailureWord();
+    getWordData(word).then(data => {
+      if (data.length > 0) {
+        console.log("is a word")
+        makeSuccessfulWord();
+      }
+      else {
+        makeFailureWord();
+      }
+      console.log("has data returned yet?")
+    $(`#A${answerNum} .answer-box`).attr('disabled', true);
+    answerNum++;
+    shuffledArray = wordOftheDay.shuffle();
+    shuffleWord();
+    answerWordArray.push(word);
+    answerCharArray = [' ', ' ', ' ', ' ', ' ', ' '];
+    })
   }
-  $(`#A${answerNum} .answer-box`).attr('disabled', true);
-  answerNum++;
-  shuffledArray = wordOftheDay.shuffle();
-  shuffleWord();
-  answerCharArray = [' ', ' ', ' ', ' ', ' ', ' '];
 }
+
 
 String.prototype.shuffle = function () {
   var a = this.split(""),
