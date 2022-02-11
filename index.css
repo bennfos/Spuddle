@@ -83,6 +83,42 @@ button {
   border-color: #f14646ec;
 }
 
+.double-letter {
+  background-color: lightsteelblue;
+}
+
+.double-letter .letter {
+  font-size: 14px;
+}
+
+.letter-placed.double-letter .letter {
+  font-size: 38px;
+}
+
+.letter-placed.double-letter {
+  background-color: lightsteelblue;
+}
+
+.triple-letter {
+  background-color: steelblue;
+}
+
+.triple-letter .letter {
+  font-size: 14px;
+}
+
+.letter-placed.triple-letter .letter {
+  font-size: 38px;
+}
+
+.letter-placed.triple-letter {
+  background-color: steelblue;
+}
+
+.letter-placed {
+  font-size: 38px;
+}
+
 .letter {
   font-size: 38px;
   margin: 0px;

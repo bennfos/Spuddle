@@ -1,7 +1,7 @@
 //get word for game
 const getWord = () => {
   //call to api
-  return fetch(`https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&excludePartOfSpeech=pronoun%2Cabbreviation%2Cfamily-name%2Cgiven-name%2Cidiom%2Cphrasal-prefix%2Cproper-noun%2Cproper-noun-plural%2Cproper-noun-possessive%2Cconjunction%2Csuffix&minCorpusCount=700&maxCorpusCount=-1&minDictionaryCount=2&maxDictionaryCount=-1&minLength=6&maxLength=6&api_key=${api_key}`)
+  return fetch(`https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&excludePartOfSpeech=pronoun%2Cabbreviation%2Caffix%2Cfamily-name%2Cgiven-name%2Cidiom%2Cphrasal-prefix%2Cproper-noun%2Cproper-noun-plural%2Cproper-noun-possessive%2Cconjunction%2Csuffix&minCorpusCount=800&maxCorpusCount=-1&minDictionaryCount=4&maxDictionaryCount=-1&minLength=6&maxLength=6&api_key=${api_key}`)
   .then(response => response.json())
 }
 

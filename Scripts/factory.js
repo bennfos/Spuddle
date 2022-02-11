@@ -6,10 +6,8 @@ const createAnswerGrid = () => {
     html += `<div id="A${i}" class="answer d-flex flex-row justify-content-center">`;
     for (var j = 0; j < 6; j++) {
       html += `<button id="A${i}L${j}" class="box answer-box border border-secondary rounded">
-
                   <p class="letter"></p>
                   <p class="score"></p>
-
               </button>`;
     }
     html += '</div>';
@@ -21,10 +19,8 @@ const createLetterBank = () => {
   let html = '';
   for (var i = 0; i < 6; i++) {
     html += `<button id='L${i}' class='box letter-box border border-secondary rounded'>
-
                 <p class="letter"></p>
                 <p class="score"></p>
-
             </button>`;
   }
   return html;
@@ -43,3 +39,4 @@ const createButtons = () => {
           </button>
         `;
 }
+
